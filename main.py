@@ -31,12 +31,12 @@ from lipreading.dataloaders import get_data_loaders, get_preprocessing_pipelines
 def load_args(default_config=None):
     parser = argparse.ArgumentParser(description='Pytorch Lipreading ')
     # -- dataset config
-    parser.add_argument('--dataset', default='lrw', help='dataset selection')
-    parser.add_argument('--num-classes', type=int, default=500, help='Number of classes')
+    parser.add_argument('--dataset', default='own', help='dataset selection')
+    parser.add_argument('--num-classes', type=int, default=100, help='Number of classes')
     parser.add_argument('--modality', default='video', choices=['video', 'raw_audio'], help='choose the modality')
     # -- directory
-    parser.add_argument('--data-dir', default='./datasets/LRW_h96w96_mouth_crop_gray', help='Loaded data directory')
-    parser.add_argument('--label-path', type=str, default='./labels/500WordsSortedList.txt', help='Path to txt file with labels')
+    parser.add_argument('--data-dir', default='./mouth_roi', help='Loaded data directory')
+    parser.add_argument('--label-path', type=str, default='./labels/100IndexWordList.txt', help='Path to txt file with labels')
     parser.add_argument('--annonation-direc', default=None, help='Loaded data directory')
     # -- model config
     parser.add_argument('--backbone-type', type=str, default='resnet', choices=['resnet', 'shufflenet'], help='Architecture used for backbone')
@@ -50,7 +50,7 @@ def load_args(default_config=None):
     parser.add_argument('--tcn-width-mult', type=int, default=1, help='TCN width multiplier')
     # -- train
     parser.add_argument('--training-mode', default='tcn', help='tcn')
-    parser.add_argument('--batch-size', type=int, default=32, help='Mini-batch size')
+    parser.add_argument('--batch-size', type=int, default=2, help='Mini-batch size')
     parser.add_argument('--optimizer',type=str, default='adamw', choices = ['adam','sgd','adamw'])
     parser.add_argument('--lr', default=3e-4, type=float, help='initial learning rate')
     parser.add_argument('--init-epoch', default=0, type=int, help='epoch to start at')
@@ -59,18 +59,18 @@ def load_args(default_config=None):
     # -- mixup
     parser.add_argument('--alpha', default=0.4, type=float, help='interpolation strength (uniform=1., ERM=0.)')
     # -- test
-    parser.add_argument('--model-path', type=str, default=None, help='Pretrained model pathname')
-    parser.add_argument('--allow-size-mismatch', default=False, action='store_true',
+    parser.add_argument('--model-path', type=str, default='models/lrw_resnet18_mstcn_adamw_s3.pth.tar', help='Pretrained model pathname')
+    parser.add_argument('--allow-size-mismatch', default=True, action='store_true',
                         help='If True, allows to init from model with mismatching weight tensors. Useful to init from model with diff. number of classes')
     # -- feature extractor
     parser.add_argument('--extract-feats', default=False, action='store_true', help='Feature extractor')
     parser.add_argument('--mouth-patch-path', type=str, default=None, help='Path to the mouth ROIs, assuming the file is saved as numpy.array')
     parser.add_argument('--mouth-embedding-out-path', type=str, default=None, help='Save mouth embeddings to a specificed path')
     # -- json pathname
-    parser.add_argument('--config-path', type=str, default=None, help='Model configuration with json format')
+    parser.add_argument('--config-path', type=str, default='configs/lrw_resnet18_mstcn.json', help='Model configuration with json format')
     # -- other vars
     parser.add_argument('--interval', default=50, type=int, help='display interval')
-    parser.add_argument('--workers', default=8, type=int, help='number of data loading workers')
+    parser.add_argument('--workers', default=4, type=int, help='number of data loading workers')
     # paths
     parser.add_argument('--logging-dir', type=str, default='./train_logs', help = 'path to the directory in which to save the log file')
 
@@ -91,7 +91,7 @@ def extract_feats(model):
     :rtype: FloatTensor
     """
     model.eval()
-    preprocessing_func = get_preprocessing_pipelines()['test']
+    preprocessing_func = get_preprocessing_pipelines(args.modality)['test']
     data = preprocessing_func(np.load(args.mouth_patch_path)['data'])  # data: TxHxW
     return model(torch.FloatTensor(data)[None, None, :, :, :].cuda(), lengths=[data.shape[0]])
 
@@ -256,6 +256,7 @@ def main():
     _ = load_model(best_fp, model)
     acc_avg_test, loss_avg_test = evaluate(model, dset_loaders['test'], criterion)
     logger.info('Test time performance of best epoch: {} (loss: {})'.format(acc_avg_test, loss_avg_test))
+
 
 if __name__ == '__main__':
     main()

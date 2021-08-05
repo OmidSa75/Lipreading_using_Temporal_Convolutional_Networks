@@ -4,9 +4,10 @@ import torch
 import random
 import librosa
 import numpy as np
+from torchvision import io
+from torchvision.transforms import functional as F
 import sys
 from lipreading.utils import read_txt_lines
-
 
 class MyDataset(object):
     def __init__(self, modality, data_partition, data_dir, label_fp, annonation_direc=None,
@@ -79,9 +80,15 @@ class MyDataset(object):
 
         try:
             if filename.endswith('npz'):
-                return np.load(filename)['data']
+                mouth = np.load(filename)['data']
+                mouth = (mouth[:, :, :, 0] + mouth[:, :, :, 1] + mouth[:, :, :, 2]) / 3
+                return mouth
             elif filename.endswith('mp4'):
-                return librosa.load(filename, sr=16000)[0][-19456:]
+                # return librosa.load(filename, sr=16000)[0][-19456:]
+                video = io.read_video(filename, pts_unit='sec')[0]
+                video = (video[:, :, :, 0] + video[:, :, :, 1] + video[:, :, :, 2]) / 3
+                video = video.numpy().astype(np.uint8)
+                return video
             else:
                 return np.load(filename)
         except IOError:
@@ -89,20 +96,20 @@ class MyDataset(object):
             sys.exit()
 
     def _apply_variable_length_aug(self, filename, raw_data):
-        # read info txt file (to see duration of word, to be used to do temporal cropping)
-        info_txt = os.path.join(self._annonation_direc, *filename.split('/')[self.label_idx:] )  # swap base folder
-        info_txt = os.path.splitext( info_txt )[0] + '.txt'   # swap extension
-        info = read_txt_lines(info_txt)  
+        # # read info txt file (to see duration of word, to be used to do temporal cropping)
+        # info_txt = os.path.join(self._annonation_direc, *filename.split('/')[self.label_idx:] )  # swap base folder
+        # info_txt = os.path.splitext( info_txt )[0] + '.txt'   # swap extension
+        # info = read_txt_lines(info_txt)
+        #
+        # utterance_duration = float( info[4].split(' ')[1] )
+        # half_interval = int( utterance_duration/2.0 * self.fps)  # num frames of utterance / 2
+        #
+        # n_frames = raw_data.shape[0]
+        # mid_idx = ( n_frames -1 ) // 2  # video has n frames, mid point is (n-1)//2 as count starts with 0
+        # left_idx = random.randint(0, max(0,mid_idx-half_interval-1)  )   # random.randint(a,b) chooses in [a,b]
+        # right_idx = random.randint( min( mid_idx+half_interval+1,n_frames ), n_frames  )
 
-        utterance_duration = float( info[4].split(' ')[1] )
-        half_interval = int( utterance_duration/2.0 * self.fps)  # num frames of utterance / 2
-                
-        n_frames = raw_data.shape[0]
-        mid_idx = ( n_frames -1 ) // 2  # video has n frames, mid point is (n-1)//2 as count starts with 0
-        left_idx = random.randint(0, max(0,mid_idx-half_interval-1)  )   # random.randint(a,b) chooses in [a,b]
-        right_idx = random.randint( min( mid_idx+half_interval+1,n_frames ), n_frames  )
-
-        return raw_data[left_idx:right_idx]
+        return raw_data[0:-1]
 
     def __getitem__(self, idx):
 

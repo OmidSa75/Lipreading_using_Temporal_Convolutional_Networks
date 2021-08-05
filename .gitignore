@@ -7,3 +7,7 @@ __pycache__/
 *.tar
 datasets/outputs
 .DS_Store
+dataset_landmarks
+dataset_videos
+mouth_roi
+shape_predictor_68_face_landmarks.dat

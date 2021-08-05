@@ -197,7 +197,7 @@ def update_logger_batch( args, logger, dset_loader, batch_idx, running_loss, run
 def get_save_folder( args):
     # create save and log folder
     save_path = '{}/{}'.format( args.logging_dir, args.training_mode )
-    save_path += '/' + datetime.datetime.now().isoformat().split('.')[0]
+    save_path += '/' + ''.join(datetime.datetime.now().isoformat().split('.')[0].split(':'))
     if not os.path.isdir(save_path):
         os.makedirs(save_path)
     return save_path
