@@ -20,14 +20,7 @@
 - [How to extract embeddings](#how-to-extract-embeddings)
 
 [Model Zoo](#model-zoo)
-
-[Citation](#citation)
-
-[License](#license)
-
-[Contact](#contact)
-
-
+[Changes](#changes)
 
 ## Deep Lipreading
 ### Introduction
@@ -150,36 +143,11 @@ We plan to include more models in the future. We use a sequence of 29-frames wit
 |snv05x_tcn2x                   |   82.5   |    1.02   |[GoogleDrive](https://bit.ly/3iXLN4f) or [BaiduDrive](https://bit.ly/3h2WDED) (key: ej9e) |32 |
 |snv05x_tcn1x                   |   79.9   |    0.58   |[GoogleDrive](https://bit.ly/38LGQqL) or [BaiduDrive](https://bit.ly/2OgzsdB) (key: devg) |11 |
 
-## Citation
+## Changes
+We train this model for our collected dataset.
 
-If you find this code useful in your research, please consider to cite the following papers:
-
-```bibtex
-@INPROCEEDINGS{ma2020towards,
-  author={Ma, Pingchuan and Martinez, Brais and Petridis, Stavros and Pantic, Maja},
-  booktitle={IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)},
-  title={Towards Practical Lipreading with Distilled and Efficient Models},
-  year={2021},
-  pages={7608-7612},
-  doi={10.1109/ICASSP39728.2021.9415063}
-}
-
-@INPROCEEDINGS{martinez2020lipreading,
-  author={Martinez, Brais and Ma, Pingchuan and Petridis, Stavros and Pantic, Maja},
-  booktitle={IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)},
-  title={Lipreading Using Temporal Convolutional Networks},
-  year={2020},
-  pages={6319-6323},
-  doi={10.1109/ICASSP40776.2020.9053841}
-}
-```
-
-## License
-
-It is noted that the code can only be used for comparative or benchmarking purposes. Users can only use code supplied under a [License](./LICENSE) for non-commercial purposes.
-
-## Contact
-
-```
-[Pingchuan Ma](pingchuan.ma16[at]imperial.ac.uk)
-```
+- [x] fixed for mp4 data with torch.
+- [x] remote annotation files for own use.
+- [ ] Added our new weight for our own dataset. 
+- [ ] Added our dataset labels.
+- [ ] Added scripts to produce landmarks.  
