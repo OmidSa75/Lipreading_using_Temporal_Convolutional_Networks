@@ -58,13 +58,36 @@ pip install -r requirements.txt
 
 ### How to prepare dataset
 
-1. Download our pre-computed landmarks from [GoogleDrive](https://bit.ly/3huI1P5) or [BaiduDrive](https://bit.ly/2YIg8um) (key: kumy) and unzip them to *`$TCN_LIPREADING_ROOT/landmarks/`* folder.
+1. Collect your dataset (videos) and change your data structure like below.
+```Shell
+dataset_folder
+    |
+    |
+    |-> participant 1
+                  |
+                  |-> videos
+    |                  
+    |-> participant 2
+                  |
+                  |->videos
+    .
+    .
+    .
+```
 
-2. Pre-process mouth ROIs using the script [crop_mouth_from_video.py](./preprocessing/crop_mouth_from_video.py) in the [preprocessing](./preprocessing) folder and save them to *`$TCN_LIPREADING_ROOT/datasets/visual_data/`*.
+2. Extract landmarks and save them to npz format by executing [./preprocessing/landmark_extracting.py](./preprocessing/landmark_extracting.py). Notice that to change the pathes in the script.
 
-3. Pre-process audio waveforms using the script [extract_audio_from_video.py](./preprocessing/extract_audio_from_video.py) in the [preprocessing](./preprocessing) folder and save them to *`$TCN_LIPREADING_ROOT/datasets/audio_data/`*.
+3. Change the dataset structer by classes by executing [./preprocessing/sort_by_classes.py](./preprocessing/sort_by_classes.py).
 
-4. Download a pre-trained model from [Model Zoo](#model-zoo) and put the model into the *`$TCN_LIPREADING_ROOT/models/`* folder.
+4. Create a csv file to save the data pathes using the script [./preprocessing/csv_maker.py](./preprocessing/csv_maker.py).
+
+5. Split data to train, test and val using the script [./preprocessing/splitting_data.py](./preprocessing/splitting_data.py).
+
+6. Pre-process mouth ROIs using the script [crop_mouth_from_video.py](./preprocessing/crop_mouth_from_video.py) in the [preprocessing](./preprocessing) folder and save them to *`$TCN_LIPREADING_ROOT/datasets/visual_data/`*.
+
+7. Pre-process audio waveforms using the script [extract_audio_from_video.py](./preprocessing/extract_audio_from_video.py) in the [preprocessing](./preprocessing) folder and save them to *`$TCN_LIPREADING_ROOT/datasets/audio_data/`*.
+
+8. Download a pre-trained model from [Model Zoo](#model-zoo) and put the model into the *`$TCN_LIPREADING_ROOT/models/`* folder.
 
 ### How to train
 
