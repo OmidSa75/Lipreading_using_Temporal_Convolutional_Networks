@@ -150,4 +150,4 @@ We train this model for our collected dataset.
 - [x] remote annotation files for own use.
 - [ ] Added our new weight for our own dataset. 
 - [ ] Added our dataset labels.
-- [ ] Added scripts to produce landmarks.  
+- [x] Added scripts to produce landmarks.  
