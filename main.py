@@ -258,5 +258,43 @@ def main():
     logger.info('Test time performance of best epoch: {} (loss: {})'.format(acc_avg_test, loss_avg_test))
 
 
+def convert_to_onnx():
+    # -- logging
+    import onnx
+    save_path = get_save_folder( args)
+    print("Model and log being saved in: {}".format(save_path))
+    logger = get_logger(args, save_path)
+    ckpt_saver = CheckpointSaver(save_path)
+
+    # -- get model
+    model = get_model_from_json().cpu()
+    optimizer = get_optimizer(args, optim_policies=model.parameters())
+
+    if args.model_path:
+        assert args.model_path.endswith('.tar') and os.path.isfile(args.model_path), \
+            "'.tar' model path does not exist. Path input: {}".format(args.model_path)
+        # resume from checkpoint
+        if args.init_epoch > 0:
+            model, optimizer, epoch_idx, ckpt_dict = load_model(args.model_path, model, optimizer)
+            args.init_epoch = epoch_idx
+            ckpt_saver.set_best_from_ckpt(ckpt_dict)
+            logger.info('Model and states have been successfully loaded from {}'.format( args.model_path ))
+        # init from trained model
+        else:
+            model = load_model(args.model_path, model, allow_size_mismatch=args.allow_size_mismatch)
+            logger.info('Model has been successfully loaded from {}'.format( args.model_path ))
+
+    sample_data = torch.randn((1, 1, 30, 88, 88))
+    lengths = [30]
+    torch.onnx.export(model,(sample_data, lengths), 'lipreading_model.onnx', verbose=True, opset_version=12,
+                      training=torch.onnx.TrainingMode.EVAL,
+                      do_constant_folding=False,
+                      input_names=['videos', 'lengths'],
+                      output_names=['output'])
+    model_onnx = onnx.load('lipreading_model.onnx')
+    onnx.checker.check_model(model_onnx)
+
+
 if __name__ == '__main__':
-    main()
+    # main()
+    convert_to_onnx()

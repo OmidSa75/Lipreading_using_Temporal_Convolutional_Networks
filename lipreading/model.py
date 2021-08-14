@@ -125,7 +125,6 @@ class Lipreading(nn.Module):
 
         return x if self.extract_feats else self.tcn(x, lengths, B)
 
-
     def _initialize_weights_randomly(self):
 
         use_sqrt = True
