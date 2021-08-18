@@ -296,5 +296,5 @@ def convert_to_onnx():
 
 
 if __name__ == '__main__':
-    # main()
-    convert_to_onnx()
+    main()
+    # convert_to_onnx()

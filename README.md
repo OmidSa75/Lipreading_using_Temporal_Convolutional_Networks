@@ -79,9 +79,10 @@ dataset_folder
 
 3. Change the dataset structer by classes by executing [./preprocessing/sort_by_classes.py](./preprocessing/sort_by_classes.py).
 
-4. Create a csv file to save the data pathes using the script [./preprocessing/csv_maker.py](./preprocessing/csv_maker.py).
+4. Split data to train, test and val using the script [./preprocessing/splitting_data.py](./preprocessing/splitting_data.py).
 
-5. Split data to train, test and val using the script [./preprocessing/splitting_data.py](./preprocessing/splitting_data.py).
+5. Create a csv file to save the data pathes using the script [./preprocessing/csv_maker.py](./preprocessing/csv_maker.py).
+
 
 6. Pre-process mouth ROIs using the script [crop_mouth_from_video.py](./preprocessing/crop_mouth_from_video.py) in the [preprocessing](./preprocessing) folder and save them to *`$TCN_LIPREADING_ROOT/datasets/visual_data/`*.
 

@@ -1,5 +1,5 @@
 """
-Preprocessing Step 4:
+Preprocessing Step 3:
 Splitting data to train, test and val.
 """
 

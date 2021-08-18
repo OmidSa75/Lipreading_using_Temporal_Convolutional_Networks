@@ -20,10 +20,10 @@ from transform import *
 def load_args(default_config=None):
     parser = argparse.ArgumentParser(description='Lipreading Pre-processing')
     # -- utils
-    parser.add_argument('--video-direc', default=None, help='raw video directory')
-    parser.add_argument('--landmark-direc', default=None, help='landmark directory')
-    parser.add_argument('--filename-path', default='./lrw500_detected_face.csv', help='list of detected video and its subject ID')
-    parser.add_argument('--save-direc', default=None, help='the directory of saving mouth ROIs')
+    parser.add_argument('--video-direc', default='../dataset_videos', help='raw video directory')
+    parser.add_argument('--landmark-direc', default='../dataset_landmarks', help='landmark directory')
+    parser.add_argument('--filename-path', default='./landmarks_paths.csv', help='list of detected video and its subject ID')
+    parser.add_argument('--save-direc', default='mouth_roi', help='the directory of saving mouth ROIs')
     # -- mean face utils
     parser.add_argument('--mean-face', default='./20words_mean_face.npy', help='mean face pathname')
     # -- mouthROIs utils
