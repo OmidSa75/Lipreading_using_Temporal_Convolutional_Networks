@@ -10,8 +10,9 @@ import sys
 from lipreading.utils import read_txt_lines
 
 class MyDataset(object):
-    def __init__(self, modality, data_partition, data_dir, label_fp, annonation_direc=None,
-        preprocessing_func=None, data_suffix='.npz'):
+    def __init__(self, opt, modality, data_partition, data_dir, label_fp, annonation_direc=None,
+                preprocessing_func=None, data_suffix='.npz'):
+        self.opt = opt
         assert os.path.isfile( label_fp ), "File path provided for the labels does not exist. Path iput: {}".format(label_fp)
         self._data_partition = data_partition
         self._data_dir = data_dir
@@ -81,12 +82,10 @@ class MyDataset(object):
         try:
             if filename.endswith('npz'):
                 mouth = np.load(filename)['data']
-                mouth = (mouth[:, :, :, 0] + mouth[:, :, :, 1] + mouth[:, :, :, 2]) / 3
                 return mouth
             elif filename.endswith('mp4'):
                 # return librosa.load(filename, sr=16000)[0][-19456:]
                 video = io.read_video(filename, pts_unit='sec')[0]
-                video = (video[:, :, :, 0] + video[:, :, :, 1] + video[:, :, :, 2]) / 3
                 video = video.numpy().astype(np.uint8)
                 return video
             else:
@@ -108,6 +107,8 @@ class MyDataset(object):
         # mid_idx = ( n_frames -1 ) // 2  # video has n frames, mid point is (n-1)//2 as count starts with 0
         # left_idx = random.randint(0, max(0,mid_idx-half_interval-1)  )   # random.randint(a,b) chooses in [a,b]
         # right_idx = random.randint( min( mid_idx+half_interval+1,n_frames ), n_frames  )
+        indices = np.random.randint(0, len(raw_data), self.opt.num_zeros_frames)
+        raw_data[indices] = 0
 
         return raw_data[0:-1]
 

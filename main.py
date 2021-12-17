@@ -55,16 +55,16 @@ def load_args(default_config=None):
     parser.add_argument('--tcn-width-mult', type=int, default=1, help='TCN width multiplier')
     # -- train
     parser.add_argument('--training-mode', default='tcn', help='tcn')
-    parser.add_argument('--batch-size', type=int, default=2, help='Mini-batch size')
+    parser.add_argument('--batch-size', type=int, default=32, help='Mini-batch size')
     parser.add_argument('--optimizer', type=str, default='adamw', choices=['adam', 'sgd', 'adamw'])
     parser.add_argument('--lr', default=3e-4, type=float, help='initial learning rate')
     parser.add_argument('--init-epoch', default=0, type=int, help='epoch to start at')
     parser.add_argument('--epochs', default=80, type=int, help='number of epochs')
-    parser.add_argument('--test', default=True, action='store_true', help='training mode')
+    parser.add_argument('--test', default=False, action='store_true', help='training mode')
     # -- mixup
     parser.add_argument('--alpha', default=0.4, type=float, help='interpolation strength (uniform=1., ERM=0.)')
     # -- test
-    parser.add_argument('--model-path', type=str, default='train_logs/tcn/2021-08-19T234405/ckpt.best.pth.tar',
+    parser.add_argument('--model-path', type=str, default='',
                         help='Pretrained model pathname')
     parser.add_argument('--allow-size-mismatch', default=True, action='store_true',
                         help='If True, allows to init from model with mismatching weight tensors. Useful to init from model with diff. number of classes')
@@ -79,7 +79,7 @@ def load_args(default_config=None):
                         help='Model configuration with json format')
     # -- other vars
     parser.add_argument('--interval', default=50, type=int, help='display interval')
-    parser.add_argument('--workers', default=4, type=int, help='number of data loading workers')
+    parser.add_argument('--workers', default=8, type=int, help='number of data loading workers')
     # paths
     parser.add_argument('--logging-dir', type=str, default='./train_logs',
                         help='path to the directory in which to save the log file')
@@ -254,7 +254,7 @@ def main():
             return
         # if test-time, performance on test partition and exit. Otherwise, performance on validation and continue (sanity check for reload)
         if args.test:
-            calc_confusion_matrix(model, dset_loaders['test'], criterion)
+            # calc_confusion_matrix(model, dset_loaders['test'], criterion)
             acc_avg_test, loss_avg_test = evaluate(model, dset_loaders['test'], criterion)
             logger.info('Test-time performance on partition {}: Loss: {:.4f}\tAcc:{:.4f}'.format('test', loss_avg_test,
                                                                                                  acc_avg_test))

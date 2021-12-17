@@ -19,20 +19,20 @@ def extract_class(path):
 
 def copy_files(file):
     cls = extract_class(file)
-    shutil.copy(file, os.path.join('dataset_landmarks', cls))
+    shutil.copy(file, os.path.join('dataset_videos', cls))
     print(file + ' copied')
 
 
 if __name__ == '__main__':
     # both for landmarks and videos
-    data = glob('landmarks/*/*.npz')
+    data = glob('../videos/*/*.mp4')
     clses = list(map(extract_class, data))
 
-    os.makedirs('dataset_landmarks', exist_ok=True)
+    os.makedirs('dataset_videos', exist_ok=True)
     for cls in set(clses):
-        os.makedirs(os.path.join('dataset_landmarks', cls), exist_ok=True)
+        os.makedirs(os.path.join('dataset_videos', cls), exist_ok=True)
 
     for file in tqdm(data):
         cls = extract_class(file)
-        shutil.copy(file, os.path.join('dataset_landmarks', cls))
+        shutil.copy(file, os.path.join('dataset_videos', cls))
 
