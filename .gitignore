@@ -12,6 +12,7 @@ dataset_landmarks
 dataset_videos
 mouth_roi
 shape_predictor_68_face_landmarks.dat
+*.jpg
 
 train_logs/tcn/*
 

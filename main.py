@@ -34,11 +34,11 @@ def load_args(default_config=None):
     parser = argparse.ArgumentParser(description='Pytorch Lipreading ')
     # -- dataset config
     parser.add_argument('--dataset', default='own', help='dataset selection')
-    parser.add_argument('--num-classes', type=int, default=100, help='Number of classes')
+    parser.add_argument('--num-classes', type=int, default=7, help='Number of classes')
     parser.add_argument('--modality', default='video', choices=['video', 'raw_audio'], help='choose the modality')
     # -- directory
     parser.add_argument('--data-dir', default='./mouth_roi', help='Loaded data directory')
-    parser.add_argument('--label-path', type=str, default='./labels/100IndexWordList.txt',
+    parser.add_argument('--label-path', type=str, default='./labels/44to51LabelList.txt',
                         help='Path to txt file with labels')
     parser.add_argument('--annonation-direc', default=None, help='Loaded data directory')
     # -- model config
@@ -55,7 +55,7 @@ def load_args(default_config=None):
     parser.add_argument('--tcn-width-mult', type=int, default=1, help='TCN width multiplier')
     # -- train
     parser.add_argument('--training-mode', default='tcn', help='tcn')
-    parser.add_argument('--batch-size', type=int, default=32, help='Mini-batch size')
+    parser.add_argument('--batch-size', type=int, default=16, help='Mini-batch size')
     parser.add_argument('--optimizer', type=str, default='adamw', choices=['adam', 'sgd', 'adamw'])
     parser.add_argument('--lr', default=3e-4, type=float, help='initial learning rate')
     parser.add_argument('--init-epoch', default=0, type=int, help='epoch to start at')
@@ -64,7 +64,7 @@ def load_args(default_config=None):
     # -- mixup
     parser.add_argument('--alpha', default=0.4, type=float, help='interpolation strength (uniform=1., ERM=0.)')
     # -- test
-    parser.add_argument('--model-path', type=str, default='',
+    parser.add_argument('--model-path', type=str, default='models/lrw_resnet18_mstcn_adamw_s3.pth.tar',
                         help='Pretrained model pathname')
     parser.add_argument('--allow-size-mismatch', default=True, action='store_true',
                         help='If True, allows to init from model with mismatching weight tensors. Useful to init from model with diff. number of classes')
@@ -285,8 +285,8 @@ def main():
     # -- evaluate best-performing epoch on test partition
     best_fp = os.path.join(ckpt_saver.save_dir, ckpt_saver.best_fn)
     _ = load_model(best_fp, model)
-    acc_avg_test, loss_avg_test = evaluate(model, dset_loaders['test'], criterion)
-    logger.info('Test time performance of best epoch: {} (loss: {})'.format(acc_avg_test, loss_avg_test))
+    # acc_avg_test, loss_avg_test = evaluate(model, dset_loaders['test'], criterion)
+    # logger.info('Test time performance of best epoch: {} (loss: {})'.format(acc_avg_test, loss_avg_test))
 
 
 def convert_to_onnx():
@@ -328,4 +328,4 @@ def convert_to_onnx():
 
 if __name__ == '__main__':
     main()
-    # convert_to_onnx()
+    # convert_to
